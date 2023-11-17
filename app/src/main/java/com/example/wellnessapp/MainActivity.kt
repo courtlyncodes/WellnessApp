@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.wellnessapp.model.Activity
 import com.example.wellnessapp.ui.theme.WellnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,34 +38,49 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WellnessApp(modifier: Modifier = Modifier) {
-
+//    Card() {
+//        Column() {
+//            ActivityInfo(day = 1, title = stringResource(R.string.meditate))
+//            ActivityImage(image = painterResource(R.drawable.meditate))
+//        }
+//    }
 }
 
+
 @Composable
-fun ActivityCard(
-    day: String,
+fun ActivityInfo(
+    day: Int,
     title: String,
-    image: Painter,
     modifier: Modifier = Modifier
 ) {
-    Card() {
+    Column() {
         Text(
-            text = day
+            text = "Day $day"
         )
         Text(
             text = title
         )
-        Image(
-            painter = image,
-            contentDescription = null
-        )
     }
+}
+
+
+@Composable
+fun ActivityImage(
+    image: Painter,
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = image,
+        contentDescription = null
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun WellnessAppPreview() {
     WellnessAppTheme {
-
+        WellnessApp()
     }
 }
+
+
