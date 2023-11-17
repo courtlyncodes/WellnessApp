@@ -73,8 +73,8 @@ fun WellnessActivity(
     activity: Activity,
     modifier: Modifier = Modifier
 ){
-    Card() {
-        Column() {
+    Card {
+        Column {
             ActivityInfo(activity.day, activity.title)
             ActivityImage(activity.imageResourceId)
         }
@@ -90,9 +90,12 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
             painter = painterResource(R.drawable.top_app_bar),
             contentDescription = null,
             modifier = modifier
-                .size(200.dp)
+                .fillMaxWidth()
+                .size(750.dp)
         )
-    })
+    },
+
+    )
 }
 @Composable
 fun ActivityInfo(
@@ -100,7 +103,7 @@ fun ActivityInfo(
     title: Int,
     modifier: Modifier = Modifier
 ) {
-    Column() {
+    Column {
         Text(
             text = "Day $day"
         )
