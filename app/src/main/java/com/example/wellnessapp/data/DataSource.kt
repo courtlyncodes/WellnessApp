@@ -1,12 +1,19 @@
 package com.example.wellnessapp.data
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.example.wellnessapp.R
-import com.example.wellnessapp.model.Activity
 
 //This class returns a list of the activities & each activity's information
-class DataSource() {
-    fun loadActivities(): List<Activity> {
-        return listOf<Activity> (
+
+data class Activity(
+    val day: Int,
+    @StringRes val title: Int,
+    @DrawableRes val imageResourceId: Int,
+    @StringRes val description: Int
+)
+
+    val activities =  listOf<Activity> (
             Activity(1, R.string.meditate, R.drawable.meditate, R.string.meditate_des),
             Activity(2, R.string.yoga, R.drawable.yoga, R.string.yoga_des),
             Activity(3, R.string.stretch, R.drawable.stretch, R.string.stretch_des),
@@ -39,5 +46,4 @@ class DataSource() {
             Activity(30, R.string.volunteer, R.drawable.volunteer, R.string.volunteer_des),
             Activity(31, R.string.flowers, R.drawable.flowers, R.string.flowers_des),
         )
-    }
-}
+

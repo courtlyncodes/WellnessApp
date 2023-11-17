@@ -7,6 +7,9 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -23,8 +26,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.wellnessapp.data.DataSource
-import com.example.wellnessapp.model.Activity
+import androidx.compose.ui.unit.dp
+import com.example.wellnessapp.data.Activity
+import com.example.wellnessapp.data.activities
 import com.example.wellnessapp.ui.theme.WellnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,26 +51,21 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(modifier: Modifier = Modifier) {
-//    Scaffold(
-//        topBar = {
-//            WellnessAppTopAppBar()
-//        }
-//    ) { it ->
-//        {
-//            ActivityList(activities = DataSource().loadActivities(), modifier = modifier)
-//        }
-//
-//    }
-
-}
-
-@Composable
-fun ActivityList(activities: List<Activity>, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier) {
-        items(activities) { activity ->
-            WellnessActivity(activity = activity)
+    Scaffold(
+        topBar = {
+            WellnessAppTopAppBar()
+        }
+    ) { it ->
+        LazyColumn(contentPadding = it) {
+            items(activities) {
+                WellnessActivity(
+                    activity = it,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -89,7 +88,9 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
         title = {
         Image(
             painter = painterResource(R.drawable.top_app_bar),
-            contentDescription = null
+            contentDescription = null,
+            modifier = modifier
+                .size(200.dp)
         )
     })
 }
@@ -116,7 +117,9 @@ fun ActivityImage(
 ) {
     Image(
         painter = painterResource(image),
-        contentDescription = null
+        contentDescription = null,
+        modifier = modifier
+
     )
 }
 
