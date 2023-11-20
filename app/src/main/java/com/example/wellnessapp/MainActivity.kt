@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,7 +41,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wellnessapp.data.Activity
-import com.example.wellnessapp.data.activities
+import com.example.wellnessapp.data.activities1
+import com.example.wellnessapp.data.activities2
+import com.example.wellnessapp.data.activities3
+import com.example.wellnessapp.data.activities4
+import com.example.wellnessapp.data.activities5
 import com.example.wellnessapp.ui.theme.WellnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,20 +65,53 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(modifier: Modifier = Modifier) {
-        Scaffold(
-            topBar = {
-                WellnessAppTopAppBar()
-            }
-        ) { it ->
-            ActivityList(activities = activities, modifier = Modifier
-                .padding(it))
+    var week by remember { mutableStateOf(1) }
+
+    Scaffold(
+        topBar = {
+            WellnessAppTopAppBar()
         }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            when (week) {
+                1 -> {
+                    LazyColumn(
+                        modifier = Modifier // Adjust the padding as needed
+                    ) {
+                        item { WelcomeMessage(modifier = modifier) }
+                        item { WeekNumber(weekNumber = week) }
+                        items(activities1) { activity ->
+                            WellnessActivity(
+                                activity = activity
+                            )
+                        }
+                        item {
+                            PageButtons(
+                                onClickBack = { week = 1 },
+                                onClickForward = { week++ }
+                            )
+                        }
+                    }
+                }
+                2, 3, 4, 5 -> {
+                    ActivityList(
+                        weekNumber = week,
+                        activities = activityByWeek(week = week),
+                        onClickBack = { week-- },
+                        onClickForward = { if (week == 5) week = 5 else week++ })
+                }
+            }
+        }
+    }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,24 +166,52 @@ fun WellnessActivity(
                 )
             }
             if (expanded) {
-            ActivityDescription(activity.description)
-        }
-        }
-    }
-}
-@Composable
-fun ActivityList(activities: List<Activity>, modifier: Modifier = Modifier) {
-    Column {
-        WelcomeMessage(modifier = modifier)
-        LazyColumn() {
-            items(activities) { activity ->
-                WellnessActivity(
-                    activity = activity
-                )
+                ActivityDescription(activity.description)
             }
         }
     }
 }
+
+@Composable
+fun ActivityList(
+    weekNumber: Int,
+    activities: List<Activity>,
+    onClickBack: () -> Unit,
+    onClickForward: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn {
+        item {
+            WeekNumber(weekNumber = weekNumber)
+        }
+        items(activities) { activity ->
+            WellnessActivity(
+                activity = activity
+            )
+        }
+        item {
+            PageButtons(
+                onClickBack = onClickBack,
+                onClickForward = onClickForward,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+fun activityByWeek(week: Int): List<Activity> {
+    return when (week) {
+        2 -> activities2
+        3 -> activities3
+        4 -> activities4
+        5 -> activities5
+        else -> {
+            activities1
+        }
+    }
+}
+
 @Composable
 fun ActivityInfo(
     day: Int,
@@ -170,6 +236,11 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun WeekNumber(weekNumber: Int, modifier: Modifier = Modifier) {
+    Text(text = "Week $weekNumber")
+}
+
+@Composable
 private fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
         onClick = onClick,
@@ -181,6 +252,7 @@ private fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Mod
         )
     }
 }
+
 @Composable
 fun ActivityImage(
     @DrawableRes image: Int,
@@ -192,9 +264,24 @@ fun ActivityImage(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .size(64.dp)
-
-
     )
+}
+
+@Composable
+fun PageButtons(
+    onClickBack: () -> Unit,
+    onClickForward: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row {
+        ElevatedButton(onClick = onClickBack) {
+            Text("Previous")
+        }
+        Spacer(modifier = modifier.weight(1f))
+        ElevatedButton(onClick = onClickForward) {
+            Text("Next")
+        }
+    }
 }
 
 @Preview(showBackground = true)
