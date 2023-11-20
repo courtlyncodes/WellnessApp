@@ -106,7 +106,12 @@ fun WellnessActivity(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Card(modifier = modifier.padding(bottom = 16.dp)) {
+    Card(
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier
+            .padding(bottom = 16.dp)
+
+    ) {
         Column {
             Row(
                 modifier = modifier
