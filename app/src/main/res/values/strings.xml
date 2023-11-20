@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">WellnessApp</string>
+
+    <!-- String resource for first page description -->
+    <string name="welcome">Welcome to NooGlow, a daily journey to prioritize your well-being as a Noogler and unlock the boundless potential that lies within. As you are embarking on an exciting new adventure in your career, it\'s essential to take care of yourself. These daily challenges will provide you with tools and resources to establish healthy habits and maintain a balanced lifestyle.</string>
+
     <!-- String resources for each challenge title  -->
     <string name="meditate">Meditate</string>
     <string name="yoga">Do Yoga</string>
@@ -32,6 +36,7 @@
     <string name="play_game">Play a Game</string>
     <string name="volunteer">Volunteer</string>
     <string name="flowers">Buy Yourself Flowers or a Plant</string>
+
     <!-- String resources for each challenge description  -->
     <string name="meditate_des">Sign up for your free access to Headspace to take a moment for meditation, a simple yet powerful practice that fosters mental clarity, reduces stress, and promotes overall health.</string>
     <string name="yoga_des">Take 20 minutes to transform your body and mind by taking a yoga class. There may be a class offered by your office.</string>

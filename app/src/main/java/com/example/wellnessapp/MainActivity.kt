@@ -5,7 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,10 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,51 +54,70 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(modifier: Modifier = Modifier) {
-    Scaffold(
-        topBar = {
-            WellnessAppTopAppBar()
-        }
-    ) { it ->
-        LazyColumn(contentPadding = it) {
-            items(activities) {
-                WellnessActivity(
-                    activity = it,
-                    modifier = Modifier.padding(16.dp)
-                )
+        Scaffold(
+            topBar = {
+                WellnessAppTopAppBar()
             }
+        ) { it ->
+            ActivityList(activities = activities, modifier = Modifier
+                .padding(it))
         }
-    }
-
 }
 
-@Composable
-fun WellnessActivity(
-    activity: Activity,
-    modifier: Modifier = Modifier
-){
-    Card {
-        Column {
-            ActivityInfo(activity.day, activity.title)
-            ActivityImage(activity.imageResourceId)
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
         title = {
-        Image(
-            painter = painterResource(R.drawable.top_app_bar),
-            contentDescription = null,
-            modifier = modifier
-                .fillMaxWidth()
-                .size(750.dp)
-        )
-    },
-
+            Image(
+                painter = painterResource(R.drawable.top_app_bar),
+                contentDescription = null,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .size(750.dp)
+            )
+        },
     )
+}
+
+@Composable
+fun WelcomeMessage(modifier: Modifier = Modifier) {
+    Text(
+        text = stringResource(R.string.welcome),
+        modifier = modifier
+            .padding(5.dp)
+    )
+}
+
+@Composable
+fun WellnessActivity(
+    activity: Activity,
+    modifier: Modifier = Modifier
+) {
+    Card() {
+        Row(
+            modifier = modifier
+                .background(Color.LightGray)
+                .fillMaxWidth()
+        ){
+            ActivityImage(activity.imageResourceId)
+            ActivityInfo(activity.day, activity.title)
+        }
+    }
+}
+@Composable
+fun ActivityList(activities: List<Activity>, modifier: Modifier = Modifier) {
+    Column {
+        WelcomeMessage(modifier = modifier)
+        LazyColumn(modifier = modifier) {
+            items(activities) { activity ->
+                WellnessActivity(activity = activity)
+                Spacer(modifier = modifier)
+            }
+        }
+    }
 }
 @Composable
 fun ActivityInfo(
@@ -121,7 +143,10 @@ fun ActivityImage(
     Image(
         painter = painterResource(image),
         contentDescription = null,
+        contentScale = ContentScale.Crop,
         modifier = modifier
+            .size(64.dp)
+
 
     )
 }
@@ -133,5 +158,3 @@ fun WellnessAppPreview() {
         WellnessApp()
     }
 }
-
-
