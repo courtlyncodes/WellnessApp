@@ -15,14 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -96,14 +105,26 @@ fun WellnessActivity(
     activity: Activity,
     modifier: Modifier = Modifier
 ) {
-    Card() {
-        Row(
-            modifier = modifier
-                .background(Color.LightGray)
-                .fillMaxWidth()
-        ){
-            ActivityImage(activity.imageResourceId)
-            ActivityInfo(activity.day, activity.title)
+    var expanded by remember { mutableStateOf(false) }
+    Card(modifier = modifier.padding(bottom = 16.dp)) {
+        Column {
+            Row(
+                modifier = modifier
+                    .background(Color.LightGray)
+                    .fillMaxWidth()
+            ) {
+                ActivityImage(activity.imageResourceId)
+                ActivityInfo(activity.day, activity.title)
+                Spacer(modifier = modifier.weight(1f))
+                ActivityButton(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded },
+                    modifier = modifier
+                )
+            }
+            if (expanded) {
+            ActivityDescription(activity.description)
+        }
         }
     }
 }
@@ -111,10 +132,11 @@ fun WellnessActivity(
 fun ActivityList(activities: List<Activity>, modifier: Modifier = Modifier) {
     Column {
         WelcomeMessage(modifier = modifier)
-        LazyColumn(modifier = modifier) {
+        LazyColumn() {
             items(activities) { activity ->
-                WellnessActivity(activity = activity)
-                Spacer(modifier = modifier)
+                WellnessActivity(
+                    activity = activity
+                )
             }
         }
     }
@@ -135,6 +157,25 @@ fun ActivityInfo(
     }
 }
 
+@Composable
+fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
+    Text(
+        text = stringResource(description)
+    )
+}
+
+@Composable
+private fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+            contentDescription = null
+        )
+    }
+}
 @Composable
 fun ActivityImage(
     @DrawableRes image: Int,
