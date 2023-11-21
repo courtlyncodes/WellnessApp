@@ -26,23 +26,24 @@ import androidx.core.view.WindowCompat
 //val dark_card_expanded = Color(0xFFE995AB)
 //val dark_image_border = Color(0xFF6D4940)
 
-private val LightColorScheme = darkColorScheme(
-    primary = light_background,
-    secondary = light_image_border,
-    tertiary = light_card
-)
-
-private val DarkColorScheme = lightColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = dark_background,
     secondary = dark_image_border,
     tertiary = dark_card
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = light_background,
+    secondary = light_image_border,
+    tertiary = light_card,
+    onTertiary = light_card_expanded
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onTertiary = Color.White,
+    ,
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */

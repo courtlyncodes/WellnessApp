@@ -37,10 +37,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wellnessapp.data.Activity
@@ -91,6 +93,8 @@ fun WellnessApp(modifier: Modifier = Modifier) {
                         item {
                             Text(
                                 text = "Week $week",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyLarge,
                                 modifier = modifier.padding(bottom = 10.dp))
                         }
                         items(activities1) { activity ->
@@ -129,13 +133,13 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(R.drawable.vector),
+                    painter = painterResource(R.drawable.logo1),
                     contentDescription = null,
                     modifier = modifier.size(44.dp)
                 )
                 Spacer(modifier = modifier.size(16.dp))
                 Image(
-                    painter = painterResource(R.drawable.component_2__2_),
+                    painter = painterResource(R.drawable.logo2),
                     contentDescription = null,
                     modifier = modifier.size(168.dp)
                 )
@@ -150,6 +154,8 @@ fun WelcomeMessage(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.welcome),
         color = Color.Black,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.bodyMedium,
         modifier = modifier
             .padding(bottom = 18.dp)
     )
@@ -167,10 +173,10 @@ fun WellnessActivity(
             .padding(bottom = 16.dp)
 
     ) {
-        Column {
+        Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) {
             Row(
                 modifier = modifier
-                    .background(MaterialTheme.colorScheme.tertiary)
+                   // .background(MaterialTheme.colorScheme.tertiary)
                     .fillMaxWidth()
             ) {
                 ActivityImage(activity.imageResourceId)
@@ -199,7 +205,10 @@ fun ActivityList(
 ) {
     LazyColumn {
         item {
-            Text(text="Week $weekNumber")
+            Text(
+                text="Week $weekNumber",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
         items(activities) { activity ->
             WellnessActivity(
@@ -238,11 +247,14 @@ fun ActivityInfo(
     Column {
         Text(
             text = "Day $day",
-            color = Color.Black
+            color = Color.Black,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = modifier.padding(top = 8.dp)
         )
         Text(
             text = stringResource(title),
-            color = Color.Black
+            color = Color.Black,
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
@@ -250,7 +262,10 @@ fun ActivityInfo(
 @Composable
 fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(description)
+        text = stringResource(description),
+        style = MaterialTheme.typography.bodySmall,
+        color = Color.Black,
+        modifier = modifier.padding(12.dp)
     )
 }
 
@@ -262,6 +277,7 @@ private fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Mod
     ) {
         Icon(
             imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+            tint = Color.Black,
             contentDescription = null
         )
     }
@@ -277,7 +293,9 @@ fun ActivityImage(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .size(64.dp)
+            .size(78.dp)
+            .padding(12.dp)
+            .clip(MaterialTheme.shapes.medium)
     )
 }
 

@@ -21,15 +21,24 @@ val Typography = Typography(
     titleSmall = TextStyle(
         fontFamily = Jaldi,
         fontWeight = FontWeight.Bold,
-        fontSize = 11.sp
+        fontSize = 14.sp
     ),
-    titleMedium = TextStyle(
+    titleLarge = TextStyle(
         fontFamily = Jaldi,
         fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = Jaldi,
         fontSize = 14.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Jost,
-        fontSize = 18.sp
+        fontSize = 14.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = Jaldi,
+        fontWeight = FontWeight.Bold,
+        fontSize = 17.sp
     )
 )
