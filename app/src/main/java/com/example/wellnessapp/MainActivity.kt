@@ -92,9 +92,9 @@ fun HomeScreen(onClick: () -> Unit) {
             modifier = Modifier.padding(it)
                 .fillMaxWidth()
         ) {
-        Text(text = "hey welcome")
+        Text(text = stringResource(R.string.welcome))
         Button(onClick = onClick) {
-            Text("click here")
+            Text("Submit")
         }
     }
     }
