@@ -3,7 +3,7 @@ package com.example.wellnessapp.ui.theme
 import androidx.compose.ui.graphics.Color
 //Light mode colors
 val light_background = Color(0xFFF9F3E5)
-val light_card = Color(0xFFF9F3E5)
+val light_card = Color(0xFFECC3C3)
 val light_card_expanded = Color(0xFFC7CEC2)
 val light_image_border = Color(0xFF60A474) //alpha of 75
 

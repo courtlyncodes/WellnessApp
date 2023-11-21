@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +29,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -55,8 +58,7 @@ class MainActivity : ComponentActivity() {
             WellnessAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     WellnessApp()
                 }
@@ -65,12 +67,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(modifier: Modifier = Modifier) {
     var week by remember { mutableStateOf(1) }
-
     Scaffold(
         topBar = {
             WellnessAppTopAppBar()
@@ -80,14 +80,19 @@ fun WellnessApp(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             when (week) {
                 1 -> {
                     LazyColumn(
-                        modifier = Modifier // Adjust the padding as needed
+                        modifier = Modifier.padding(18.dp)
                     ) {
                         item { WelcomeMessage(modifier = modifier) }
-                        item { WeekNumber(weekNumber = week) }
+                        item {
+                            Text(
+                                text = "Week $week",
+                                modifier = modifier.padding(bottom = 10.dp))
+                        }
                         items(activities1) { activity ->
                             WellnessActivity(
                                 activity = activity
@@ -117,15 +122,26 @@ fun WellnessApp(modifier: Modifier = Modifier) {
 @Composable
 fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
+        modifier = modifier,
         title = {
-            Image(
-                painter = painterResource(R.drawable.top_app_bar),
-                contentDescription = null,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .size(750.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.vector),
+                    contentDescription = null,
+                    modifier = modifier.size(44.dp)
+                )
+                Spacer(modifier = modifier.size(16.dp))
+                Image(
+                    painter = painterResource(R.drawable.component_2__2_),
+                    contentDescription = null,
+                    modifier = modifier.size(168.dp)
+                )
+            }
         },
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
     )
 }
 
@@ -133,8 +149,9 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
 fun WelcomeMessage(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.welcome),
+        color = Color.Black,
         modifier = modifier
-            .padding(5.dp)
+            .padding(bottom = 18.dp)
     )
 }
 
@@ -153,7 +170,7 @@ fun WellnessActivity(
         Column {
             Row(
                 modifier = modifier
-                    .background(Color.LightGray)
+                    .background(MaterialTheme.colorScheme.tertiary)
                     .fillMaxWidth()
             ) {
                 ActivityImage(activity.imageResourceId)
@@ -182,7 +199,7 @@ fun ActivityList(
 ) {
     LazyColumn {
         item {
-            WeekNumber(weekNumber = weekNumber)
+            Text(text="Week $weekNumber")
         }
         items(activities) { activity ->
             WellnessActivity(
@@ -220,10 +237,12 @@ fun ActivityInfo(
 ) {
     Column {
         Text(
-            text = "Day $day"
+            text = "Day $day",
+            color = Color.Black
         )
         Text(
-            text = stringResource(title)
+            text = stringResource(title),
+            color = Color.Black
         )
     }
 }
@@ -233,11 +252,6 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
     Text(
         text = stringResource(description)
     )
-}
-
-@Composable
-fun WeekNumber(weekNumber: Int, modifier: Modifier = Modifier) {
-    Text(text = "Week $weekNumber")
 }
 
 @Composable

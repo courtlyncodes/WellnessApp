@@ -26,13 +26,13 @@ import androidx.core.view.WindowCompat
 //val dark_card_expanded = Color(0xFFE995AB)
 //val dark_image_border = Color(0xFF6D4940)
 
-private val DarkColorScheme = darkColorScheme(
+private val LightColorScheme = darkColorScheme(
     primary = light_background,
     secondary = light_image_border,
     tertiary = light_card
 )
 
-private val LightColorScheme = lightColorScheme(
+private val DarkColorScheme = lightColorScheme(
     primary = dark_background,
     secondary = dark_image_border,
     tertiary = dark_card
@@ -52,7 +52,7 @@ private val LightColorScheme = lightColorScheme(
 fun WellnessAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -76,6 +76,7 @@ fun WellnessAppTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = Shapes
     )
 }
