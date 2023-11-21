@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
@@ -31,9 +33,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,10 +66,37 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    WellnessApp()
+                    App()
                 }
             }
         }
+    }
+}
+@Composable
+fun App(){
+    var changeScreens by remember { mutableStateOf(false) }
+    HomeScreen(onClick = { changeScreens = true } )
+    if(changeScreens) {
+        WellnessApp()
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(onClick: () -> Unit) {
+    Scaffold(
+        topBar = {
+            WellnessAppTopAppBar()
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(it)
+                .fillMaxWidth()
+        ) {
+        Text(text = "hey welcome")
+        Button(onClick = onClick) {
+            Text("click here")
+        }
+    }
     }
 }
 
@@ -112,7 +143,7 @@ fun WellnessApp(modifier: Modifier = Modifier) {
                 }
                 2, 3, 4, 5 -> {
                     ActivityList(
-                        weekNumber = week,
+                        week = week,
                         activities = activityByWeek(week = week),
                         onClickBack = { week-- },
                         onClickForward = { if (week == 5) week = 5 else week++ })
@@ -167,16 +198,19 @@ fun WellnessActivity(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val currentWeek by rememberUpdatedState(activity.week)
+
+    LaunchedEffect(currentWeek) {
+        expanded = false
+    }
     Card(
         shape = MaterialTheme.shapes.small,
         modifier = modifier
             .padding(bottom = 16.dp)
-
     ) {
         Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) {
             Row(
                 modifier = modifier
-                   // .background(MaterialTheme.colorScheme.tertiary)
                     .fillMaxWidth()
             ) {
                 ActivityImage(activity.imageResourceId)
@@ -197,16 +231,16 @@ fun WellnessActivity(
 
 @Composable
 fun ActivityList(
-    weekNumber: Int,
+    week: Int,
     activities: List<Activity>,
     onClickBack: () -> Unit,
     onClickForward: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn {
+    LazyColumn (modifier = Modifier.padding(18.dp)) {
         item {
             Text(
-                text="Week $weekNumber",
+                text="Week $week",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -270,7 +304,7 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
         onClick = onClick,
         modifier = modifier
@@ -306,12 +340,25 @@ fun PageButtons(
     modifier: Modifier = Modifier
 ) {
     Row {
-        ElevatedButton(onClick = onClickBack) {
-            Text("Previous")
+        ElevatedButton(
+            onClick = onClickBack,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+
+        ) {
+            Text(
+                "Previous",
+                color = Color.Black
+            )
         }
         Spacer(modifier = modifier.weight(1f))
-        ElevatedButton(onClick = onClickForward) {
-            Text("Next")
+        ElevatedButton(
+            onClick = onClickForward,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+        ) {
+            Text(
+                "Next",
+                color = Color.Black
+            )
         }
     }
 }
@@ -320,6 +367,6 @@ fun PageButtons(
 @Composable
 fun WellnessAppPreview() {
     WellnessAppTheme {
-        WellnessApp()
+        App()
     }
 }

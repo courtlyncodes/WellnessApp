@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 val light_background = Color(0xFFF9F3E5)
 val light_card = Color(0xFFECC3C3)
 val light_card_expanded = Color(0xFFC7CEC2)
-val light_image_border = Color(0xFF60A474) //alpha of 75
+val light_image_border = Color(0xFF81BA92) //alpha of 75
 
 //Dark mode colors
 val dark_background = Color(0xFF283824)
