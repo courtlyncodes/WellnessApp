@@ -34,7 +34,7 @@ val Typography = Typography(
     ),
     bodyMedium = TextStyle(
         fontFamily = Jost,
-        fontSize = 14.sp
+        fontSize = 17.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = Jaldi,

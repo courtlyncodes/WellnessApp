@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -31,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,20 +45,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.wellnessapp.data.Activity
 import com.example.wellnessapp.data.activities1
 import com.example.wellnessapp.data.activities2
 import com.example.wellnessapp.data.activities3
 import com.example.wellnessapp.data.activities4
 import com.example.wellnessapp.data.activities5
+import com.example.wellnessapp.ui.theme.Jost
 import com.example.wellnessapp.ui.theme.WellnessAppTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,37 +82,100 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
-fun App(){
+fun App() {
+    var text by remember { mutableStateOf("") }
     var changeScreens by remember { mutableStateOf(false) }
-    HomeScreen(onClick = { changeScreens = true } )
-    if(changeScreens) {
-        WellnessApp()
+
+    HomeScreen(
+        name = text,
+        onClick = { changeScreens = true },
+        onTextChange = { text = it }
+    )
+
+    if (changeScreens) {
+        WellnessApp(name = text)
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
 @Composable
-fun HomeScreen(onClick: () -> Unit) {
-    Scaffold(
-        topBar = {
-            WellnessAppTopAppBar()
-        }
-    ) {
-        Column(
-            modifier = Modifier.padding(it)
-                .fillMaxWidth()
-        ) {
-        Text(text = stringResource(R.string.welcome))
-        Button(onClick = onClick) {
-            Text("Submit")
-        }
+fun HomeScreen(
+    name: String,
+    onClick: () -> Unit,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier) {
+    val rainbowColors =
+        listOf(
+            Color(0xFF9575CD),
+            Color(0xFFBA68C8),
+            Color(0xFFE57373),
+            Color(0xFFFFB74D),
+            Color(0xFFFFF176),
+            Color(0xFFAED581),
+            Color(0xFF4DD0E1),
+            Color(0xFF9575CD)
+        )
+    val brush = remember {
+        Brush.linearGradient(
+            colors = rainbowColors
+        )
     }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.primary)
+    ) {
+        Image(
+            painter = painterResource(R.drawable.home_screen_logo),
+            contentDescription = "green flower and NooGlow logo",
+            modifier = modifier
+                .size(200.dp)
+        )
+        Text(
+            text = stringResource(R.string.welcome),
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = modifier
+                .padding(25.dp)
+        )
+        TextField(
+            value = name,
+            onValueChange = { onTextChange(it) },
+            label = {
+                Text(
+                    "Name",
+                    color = Color.Black
+                )
+                    },
+            textStyle = TextStyle(brush = brush),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            )
+        )
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiaryContainer),
+            modifier = modifier
+                .align(Alignment.End)
+                .padding(end = 25.dp)
+        ) {
+            Text(
+                "Submit",
+                color = Color.Black
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WellnessApp(modifier: Modifier = Modifier) {
+fun WellnessApp(name: String, modifier: Modifier = Modifier) {
     var week by remember { mutableStateOf(1) }
     Scaffold(
         topBar = {
@@ -120,13 +193,18 @@ fun WellnessApp(modifier: Modifier = Modifier) {
                     LazyColumn(
                         modifier = Modifier.padding(18.dp)
                     ) {
-                        item { WelcomeMessage(modifier = modifier) }
+                        item { Text(
+                            text = "Hello $name!",
+                            fontFamily = Jost,
+                            fontSize = 20.sp
+                        ) }
                         item {
                             Text(
                                 text = "Week $week",
                                 color = Color.Black,
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = modifier.padding(bottom = 10.dp))
+                                modifier = modifier.padding(bottom = 10.dp)
+                            )
                         }
                         items(activities1) { activity ->
                             WellnessActivity(
@@ -141,6 +219,7 @@ fun WellnessApp(modifier: Modifier = Modifier) {
                         }
                     }
                 }
+
                 2, 3, 4, 5 -> {
                     ActivityList(
                         week = week,
@@ -181,15 +260,33 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun WelcomeMessage(modifier: Modifier = Modifier) {
-    Text(
-        text = stringResource(R.string.welcome),
-        color = Color.Black,
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = modifier
-            .padding(bottom = 18.dp)
-    )
+fun ActivityList(
+    week: Int,
+    activities: List<Activity>,
+    onClickBack: () -> Unit,
+    onClickForward: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = Modifier.padding(18.dp)) {
+        item {
+            Text(
+                text = "Week $week",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        items(activities) { activity ->
+            WellnessActivity(
+                activity = activity
+            )
+        }
+        item {
+            PageButtons(
+                onClickBack = onClickBack,
+                onClickForward = onClickForward,
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @Composable
@@ -230,49 +327,6 @@ fun WellnessActivity(
 }
 
 @Composable
-fun ActivityList(
-    week: Int,
-    activities: List<Activity>,
-    onClickBack: () -> Unit,
-    onClickForward: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn (modifier = Modifier.padding(18.dp)) {
-        item {
-            Text(
-                text="Week $week",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-        items(activities) { activity ->
-            WellnessActivity(
-                activity = activity
-            )
-        }
-        item {
-            PageButtons(
-                onClickBack = onClickBack,
-                onClickForward = onClickForward,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@Composable
-fun activityByWeek(week: Int): List<Activity> {
-    return when (week) {
-        2 -> activities2
-        3 -> activities3
-        4 -> activities4
-        5 -> activities5
-        else -> {
-            activities1
-        }
-    }
-}
-
-@Composable
 fun ActivityInfo(
     day: Int,
     title: Int,
@@ -304,20 +358,6 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-            tint = Color.Black,
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
 fun ActivityImage(
     @DrawableRes image: Int,
     modifier: Modifier = Modifier
@@ -331,6 +371,20 @@ fun ActivityImage(
             .padding(12.dp)
             .clip(MaterialTheme.shapes.medium)
     )
+}
+
+@Composable
+fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+            tint = Color.Black,
+            contentDescription = null
+        )
+    }
 }
 
 @Composable
@@ -359,6 +413,19 @@ fun PageButtons(
                 "Next",
                 color = Color.Black
             )
+        }
+    }
+}
+
+@Composable
+fun activityByWeek(week: Int): List<Activity> {
+    return when (week) {
+        2 -> activities2
+        3 -> activities3
+        4 -> activities4
+        5 -> activities5
+        else -> {
+            activities1
         }
     }
 }

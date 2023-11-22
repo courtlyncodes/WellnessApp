@@ -36,7 +36,8 @@ private val LightColorScheme = lightColorScheme(
     primary = light_background,
     secondary = light_image_border,
     tertiary = light_card,
-    onTertiary = light_card_expanded
+    onTertiary = light_card_expanded,
+    tertiaryContainer = light_button_hs
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -48,6 +49,7 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
 
 @Composable
 fun WellnessAppTheme(
