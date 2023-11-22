@@ -56,14 +56,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.wellnessapp.data.Activity
 import com.example.wellnessapp.data.activities1
 import com.example.wellnessapp.data.activities2
 import com.example.wellnessapp.data.activities3
 import com.example.wellnessapp.data.activities4
 import com.example.wellnessapp.data.activities5
-import com.example.wellnessapp.ui.theme.Jost
 import com.example.wellnessapp.ui.theme.WellnessAppTheme
 
 
@@ -136,14 +134,7 @@ fun HomeScreen(
             modifier = modifier
                 .size(200.dp)
         )
-        Text(
-            text = stringResource(R.string.welcome),
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = modifier
-                .padding(25.dp)
-        )
+        WelcomeMessages()
         TextField(
             value = name,
             onValueChange = { onTextChange(it) },
@@ -173,6 +164,28 @@ fun HomeScreen(
     }
 }
 
+@Composable
+fun WelcomeMessages(modifier: Modifier = Modifier){
+    Column {
+        Text(
+            text = stringResource(R.string.welcome1),
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = modifier
+                .padding(start = 25.dp, top = 25.dp, end = 25.dp, bottom = 10.dp)
+        )
+        Text(
+            text = stringResource(R.string.welcome2),
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = modifier
+                .padding(start = 25.dp, end = 25.dp, bottom = 25.dp)
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(name: String, modifier: Modifier = Modifier) {
@@ -193,11 +206,22 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                     LazyColumn(
                         modifier = Modifier.padding(18.dp)
                     ) {
-                        item { Text(
+                        item {
+                            Text(
                             text = "Hello $name!",
-                            fontFamily = Jost,
-                            fontSize = 20.sp
-                        ) }
+                            style = MaterialTheme.typography.headlineLarge
+                            )
+                        }
+                        item {
+                            Text(
+                                text = stringResource(R.string.how_to),
+                                color = Color.Black,
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = modifier
+                                    .padding(25.dp)
+                            )
+                        }
                         item {
                             Text(
                                 text = "Week $week",

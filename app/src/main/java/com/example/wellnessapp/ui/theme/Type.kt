@@ -14,7 +14,8 @@ val Jaldi = FontFamily(
 )
 
 val Jost = FontFamily(
-    Font(R.font.jost_regular)
+    Font(R.font.jost_regular),
+    Font(R.font.jost_thin)
 )
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -40,5 +41,10 @@ val Typography = Typography(
         fontFamily = Jaldi,
         fontWeight = FontWeight.Bold,
         fontSize = 17.sp
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = Jost,
+        fontWeight = FontWeight.Thin,
+        fontSize = 22.sp
     )
 )

@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">WellnessApp</string>
 
+    <!-- String resource for home page descriptions -->
+    <string name="welcome1">Welcome to NooGlow, a daily journey to prioritize your well-being as a Noogler and unlock the boundless potential that lies within.</string>
+    <string name="welcome2">As you are embarking on an exciting new adventure in your career, it\'s essential to take care of yourself. These daily challenges will provide you with tools and resources to establish healthy habits and maintain a balanced lifestyle.</string>
+
     <!-- String resource for first page description -->
-    <string name="welcome">Welcome to NooGlow, a daily journey to prioritize your well-being as a Noogler and unlock the boundless potential that lies within. As you are embarking on an exciting new adventure in your career, it\'s essential to take care of yourself. These daily challenges will provide you with tools and resources to establish healthy habits and maintain a balanced lifestyle.</string>
+    <string name="how_to">Each week, you\'ll find a set of daily wellness challenges to help you improve your overall health and well-being. Use the navigation buttons at the bottom of the page to change weeks. Week 5 includes additional challenges. <strong>Remember to take care of yourself!</strong></string>
 
     <!-- String resources for each challenge title  -->
     <string name="meditate">Meditate</string>
