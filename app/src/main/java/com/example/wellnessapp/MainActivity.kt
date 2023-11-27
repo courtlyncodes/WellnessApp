@@ -90,31 +90,37 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//Shows the home screen or wellness app based on user submit
 @Composable
 fun App() {
-    var text by remember { mutableStateOf("") }
-    var changeScreens by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") } //Stores the user input for 'name'
+    var changeScreens by remember { mutableStateOf(false) } //Determines if screens should be changed based on button click
     HomeScreen(
         name = text,
-        onClick = { changeScreens = true },
+        onClick = {
+            changeScreens = true
+        }, //If user clicks "submit" or presses enter, state is changed to true
         onTextChange = { text = it }
     )
-    if (changeScreens) {
+    if (changeScreens) { //If state is true (user clicked "submit" or pressed enter), the wellness app (activities) are shown
         WellnessApp(name = text)
     }
 }
 
+//Renders the home screen when a user opens the app
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalTextApi::class,
-    ExperimentalComposeUiApi::class,
     ExperimentalComposeUiApi::class
 )
 @Composable
 fun HomeScreen(
-    name: String, onClick: () -> Unit, onTextChange: (String) -> Unit, modifier: Modifier = Modifier
+    name: String,
+    onClick: () -> Unit,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val rainbowColors = listOf(
+    val rainbowColors = listOf( //List of colors for user input
         Color(0xFF9575CD),
         Color(0xFFBA68C8),
         Color(0xFFE57373),
@@ -124,12 +130,13 @@ fun HomeScreen(
         Color(0xFF4DD0E1),
         Color(0xFF9575CD)
     )
-    val brush = remember {
+    val brush = remember { //Brush to create gradient of colors for user input
         Brush.linearGradient(
             colors = rainbowColors
         )
     }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val keyboardController =
+        LocalSoftwareKeyboardController.current //Controls visibility of the keyboard
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,24 +151,26 @@ fun HomeScreen(
             modifier = modifier.size(200.dp)
         )
         WelcomeMessages()
-        TextField(value = name,
+        TextField(value = name, //Takes user input for their name
             onValueChange = { onTextChange(it) },
             label = {
                 Text(
-                    "Name", color = Color.Gray, textAlign = TextAlign.Start
+                    "Name",
+                    color = Color.Gray,
+                    textAlign = TextAlign.Start
                 )
             },
             textStyle = TextStyle(brush = brush),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = {
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), //Signals a checkmark on the keyboard to represent that the user is done with input
+            keyboardActions = KeyboardActions(onDone = { //When the done button is clicked the user's input is submitted & they are taken to the app
                 onClick()
-                keyboardController?.hide()
+                keyboardController?.hide() //Hides the keyboard upon screen change
             }),
             singleLine = true,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 25.dp)
-                .onKeyEvent { event ->
+                .onKeyEvent { event -> //When user presses enter on the keyboard they are taken to the app
                     if (event.key == Key.Enter) {
                         onClick()
                         keyboardController?.hide()
@@ -178,12 +187,14 @@ fun HomeScreen(
                 .padding(end = 25.dp)
         ) {
             Text(
-                "Submit", color = Color.Black
+                "Submit",
+                color = Color.Black
             )
         }
     }
 }
 
+//Function to store the welcome messages on the home screen
 @Composable
 fun WelcomeMessages(modifier: Modifier = Modifier) {
     Column(modifier = Modifier.padding(start = 25.dp, end = 25.dp, bottom = 25.dp)) {
@@ -203,12 +214,13 @@ fun WelcomeMessages(modifier: Modifier = Modifier) {
     }
 }
 
+//Renders the Wellness App - shows each activity by week along with a message on the first page
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessApp(name: String, modifier: Modifier = Modifier) {
-    var week by remember { mutableStateOf(1) }
+    var week by remember { mutableStateOf(1) } //State to render the week based on page button click
     Scaffold(topBar = {
-        WellnessAppTopAppBar()
+        WellnessAppTopAppBar() //Top App Bar
     }) {
         Column(
             modifier = Modifier
@@ -216,18 +228,18 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                 .padding(it)
                 .background(MaterialTheme.colorScheme.primary)
         ) {
-            when (week) {
-                1 -> {
+            when (week) { //When conditional to render page based on the week
+                1 -> { //Week 1 has its own lazy column to included the greeting and how-to message along with the week 1 activities
                     LazyColumn(
                         modifier = Modifier.padding(18.dp)
                     ) {
-                        item {
+                        item {//Renders a greeting based on the user's inputted name
                             Text(
                                 text = "Hello $name!",
                                 style = MaterialTheme.typography.headlineLarge
                             )
                         }
-                        item {
+                        item {//Renders a 'how-to' message on the first page
                             Text(
                                 text = stringResource(R.string.how_to),
                                 color = Color.Black,
@@ -236,7 +248,7 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                                 modifier = modifier.padding(25.dp)
                             )
                         }
-                        item {
+                        item {//Shows the week number for week 1 above the activity list
                             Text(
                                 text = "Week $week",
                                 color = Color.Black,
@@ -244,28 +256,34 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                                 modifier = modifier.padding(bottom = 10.dp)
                             )
                         }
-                        items(activities1) { activity ->
+                        items(activities1) { activity -> //Renders the activity cards for week 1
                             WellnessActivity(
                                 activity = activity
                             )
                         }
-                        item {
-                            PageButtons(onClickBack = { week = 1 }, onClickForward = { week++ })
+                        item { //Renders page buttons at bottom of screen
+                            PageButtons(
+                                onClickBack = { week = 1 }, //Page does not change if week is week 1
+                                onClickForward = { week++ })
                         }
                     }
                 }
 
-                2, 3, 4, 5 -> {
+                2, 3, 4, 5 -> { //Second part of conditional that shows activity cards based on the week number
                     ActivityList(week = week,
                         activities = activityByWeek(week = week),
-                        onClickBack = { week-- },
-                        onClickForward = { if (week == 5) week = 5 else week++ })
+                        onClickBack = { week-- }, //Week is decreased and changes to previous week when "previous" button is clicked
+                        onClickForward = {
+                            if (week == 5) week =
+                                5 else week++ //Page does not change if the week is week 5, otherwise the week is increased and changes to the next week
+                        })
                 }
             }
         }
     }
 }
 
+//Top App Bar function
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
@@ -289,10 +307,11 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
                 )
             }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary) //Sets the background color of the top app bar
     )
 }
 
+//Renders a list of activity cards
 @Composable
 fun ActivityList(
     week: Int,
@@ -302,38 +321,44 @@ fun ActivityList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = Modifier.padding(18.dp)) {
-        item {
+        item { //Shows the week
             Text(
-                text = "Week $week", style = MaterialTheme.typography.bodyLarge
+                text = "Week $week",
+                style = MaterialTheme.typography.bodyLarge
             )
         }
-        items(activities) { activity ->
+        items(activities) { activity -> //Shows the list of activity cards
             WellnessActivity(
                 activity = activity
             )
         }
-        item {
+        item { //Shows the page buttons at the bottom of each page
             PageButtons(
-                onClickBack = onClickBack, onClickForward = onClickForward, modifier = modifier
+                onClickBack = onClickBack,
+                onClickForward = onClickForward,
+                modifier = modifier
             )
         }
     }
 }
 
+//Creates each activity card with the activity's image, basic information, & expandable button to show an optional description
 @Composable
 fun WellnessActivity(
-    activity: Activity, modifier: Modifier = Modifier
+    activity: Activity,
+    modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val currentWeek by rememberUpdatedState(activity.week)
+    var expanded by remember { mutableStateOf(false) } //State that determines if expanded button is clicked
+    val currentWeek by rememberUpdatedState(activity.week) //State that determines the week based on "Next" or "Previous" button click
 
-    LaunchedEffect(currentWeek) {
+    LaunchedEffect(currentWeek) {  //Determines if the week has been changed. If so, all cards' optional descriptions are collapsed
         expanded = false
     }
     Card(
-        shape = MaterialTheme.shapes.small, modifier = modifier.padding(bottom = 16.dp)
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier.padding(bottom = 16.dp)
     ) {
-        Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) {
+        Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) { //Changes the color of the card if the card is expanded
             Row(
                 modifier = modifier.fillMaxWidth()
             ) {
@@ -341,19 +366,24 @@ fun WellnessActivity(
                 ActivityInfo(activity.day, activity.title)
                 Spacer(modifier = modifier.weight(1f))
                 ActivityButton(
-                    expanded = expanded, onClick = { expanded = !expanded }, modifier = modifier
+                    expanded = expanded,
+                    onClick = { expanded = !expanded },
+                    modifier = modifier
                 )
             }
-            if (expanded) {
+            if (expanded) { //If the expanded button is clicked the description of the activity is shown underneath the activity's information
                 ActivityDescription(activity.description)
             }
         }
     }
 }
 
+//Shows the basic information for each activity, including day and the title
 @Composable
 fun ActivityInfo(
-    day: Int, title: Int, modifier: Modifier = Modifier
+    day: Int,
+    title: Int,
+    modifier: Modifier = Modifier
 ) {
     Column {
         Text(
@@ -370,8 +400,12 @@ fun ActivityInfo(
     }
 }
 
+//Optional description of each activity
 @Composable
-fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
+fun ActivityDescription(
+    description: Int,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = stringResource(description),
         style = MaterialTheme.typography.bodySmall,
@@ -380,9 +414,11 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
     )
 }
 
+//Renders an image for each activity
 @Composable
 fun ActivityImage(
-    @DrawableRes image: Int, modifier: Modifier = Modifier
+    @DrawableRes image: Int,
+    modifier: Modifier = Modifier
 ) {
     Image(
         painter = painterResource(image),
@@ -395,22 +431,31 @@ fun ActivityImage(
     )
 }
 
+//Expandable button to render each activity's description
 @Composable
-fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ActivityButton(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     IconButton(
-        onClick = onClick, modifier = modifier
+        onClick = onClick,
+        modifier = modifier
     ) {
         Icon(
-            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown, //changes the direction of the button when clicked to expand or condense
             tint = Color.Black,
             contentDescription = null
         )
     }
 }
 
+//Previous and Next buttons
 @Composable
 fun PageButtons(
-    onClickBack: () -> Unit, onClickForward: () -> Unit, modifier: Modifier = Modifier
+    onClickBack: () -> Unit,
+    onClickForward: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row {
         ElevatedButton(
@@ -434,8 +479,9 @@ fun PageButtons(
     }
 }
 
+//Return list of activities for weeks 2 - 5
 @Composable
-fun activityByWeek(week: Int): List<Activity> {
+private fun activityByWeek(week: Int): List<Activity> {
     return when (week) {
         2 -> activities2
         3 -> activities3
