@@ -54,7 +54,7 @@ data class Activity(
             Activity(4,27, R.string.puzzle, R.drawable.puzzle, R.string.puzzle_des),
             Activity(4,28, R.string.take_class, R.drawable.take_class, R.string.take_class_des)
         )
-
+        //Extra activities
         val activities5 =  listOf<Activity> (
             Activity(5, 29, R.string.play_game, R.drawable.play_game, R.string.play_game_des),
             Activity(5, 30, R.string.volunteer, R.drawable.volunteer, R.string.volunteer_des),
