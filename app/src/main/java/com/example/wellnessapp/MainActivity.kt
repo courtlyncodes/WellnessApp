@@ -155,7 +155,7 @@ fun HomeScreen(
             onValueChange = { onTextChange(it) },
             label = {
                 Text(
-                    "Name",
+                    "Enter Your Name",
                     color = Color.Gray,
                     textAlign = TextAlign.Start
                 )
