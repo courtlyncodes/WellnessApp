@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.example.wellnessapp
 
 import android.os.Bundle
@@ -13,10 +15,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -43,11 +47,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -85,41 +94,42 @@ class MainActivity : ComponentActivity() {
 fun App() {
     var text by remember { mutableStateOf("") }
     var changeScreens by remember { mutableStateOf(false) }
-
     HomeScreen(
         name = text,
         onClick = { changeScreens = true },
         onTextChange = { text = it }
     )
-
     if (changeScreens) {
         WellnessApp(name = text)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalTextApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun HomeScreen(
-    name: String,
-    onClick: () -> Unit,
-    onTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier) {
-    val rainbowColors =
-        listOf(
-            Color(0xFF9575CD),
-            Color(0xFFBA68C8),
-            Color(0xFFE57373),
-            Color(0xFFFFB74D),
-            Color(0xFFFFF176),
-            Color(0xFFAED581),
-            Color(0xFF4DD0E1),
-            Color(0xFF9575CD)
-        )
+    name: String, onClick: () -> Unit, onTextChange: (String) -> Unit, modifier: Modifier = Modifier
+) {
+    val rainbowColors = listOf(
+        Color(0xFF9575CD),
+        Color(0xFFBA68C8),
+        Color(0xFFE57373),
+        Color(0xFFFFB74D),
+        Color(0xFFFFF176),
+        Color(0xFFAED581),
+        Color(0xFF4DD0E1),
+        Color(0xFF9575CD)
+    )
     val brush = remember {
         Brush.linearGradient(
             colors = rainbowColors
         )
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,24 +141,35 @@ fun HomeScreen(
         Image(
             painter = painterResource(R.drawable.home_screen_logo),
             contentDescription = "green flower and NooGlow logo",
-            modifier = modifier
-                .size(200.dp)
+            modifier = modifier.size(200.dp)
         )
         WelcomeMessages()
-        TextField(
-            value = name,
+        TextField(value = name,
             onValueChange = { onTextChange(it) },
             label = {
                 Text(
-                    "Name",
-                    color = Color.Black
+                    "Name", color = Color.Gray, textAlign = TextAlign.Start
                 )
-                    },
+            },
             textStyle = TextStyle(brush = brush),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            )
-        )
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {
+                onClick()
+                keyboardController?.hide()
+            }),
+            singleLine = true,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp)
+                .onKeyEvent { event ->
+                    if (event.key == Key.Enter) {
+                        onClick()
+                        keyboardController?.hide()
+                        true
+                    } else {
+                        false
+                    }
+                })
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiaryContainer),
@@ -157,31 +178,27 @@ fun HomeScreen(
                 .padding(end = 25.dp)
         ) {
             Text(
-                "Submit",
-                color = Color.Black
+                "Submit", color = Color.Black
             )
         }
     }
 }
 
 @Composable
-fun WelcomeMessages(modifier: Modifier = Modifier){
-    Column {
+fun WelcomeMessages(modifier: Modifier = Modifier) {
+    Column(modifier = Modifier.padding(start = 25.dp, end = 25.dp, bottom = 25.dp)) {
         Text(
             text = stringResource(R.string.welcome1),
             color = Color.Black,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = modifier
-                .padding(start = 25.dp, top = 25.dp, end = 25.dp, bottom = 10.dp)
+            style = MaterialTheme.typography.bodyMedium
         )
+        Spacer(modifier = modifier.height(10.dp))
         Text(
             text = stringResource(R.string.welcome2),
             color = Color.Black,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = modifier
-                .padding(start = 25.dp, end = 25.dp, bottom = 25.dp)
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -190,11 +207,9 @@ fun WelcomeMessages(modifier: Modifier = Modifier){
 @Composable
 fun WellnessApp(name: String, modifier: Modifier = Modifier) {
     var week by remember { mutableStateOf(1) }
-    Scaffold(
-        topBar = {
-            WellnessAppTopAppBar()
-        }
-    ) {
+    Scaffold(topBar = {
+        WellnessAppTopAppBar()
+    }) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -208,8 +223,8 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                     ) {
                         item {
                             Text(
-                            text = "Hello $name!",
-                            style = MaterialTheme.typography.headlineLarge
+                                text = "Hello $name!",
+                                style = MaterialTheme.typography.headlineLarge
                             )
                         }
                         item {
@@ -218,8 +233,7 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                                 color = Color.Black,
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = modifier
-                                    .padding(25.dp)
+                                modifier = modifier.padding(25.dp)
                             )
                         }
                         item {
@@ -236,17 +250,13 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                             )
                         }
                         item {
-                            PageButtons(
-                                onClickBack = { week = 1 },
-                                onClickForward = { week++ }
-                            )
+                            PageButtons(onClickBack = { week = 1 }, onClickForward = { week++ })
                         }
                     }
                 }
 
                 2, 3, 4, 5 -> {
-                    ActivityList(
-                        week = week,
+                    ActivityList(week = week,
                         activities = activityByWeek(week = week),
                         onClickBack = { week-- },
                         onClickForward = { if (week == 5) week = 5 else week++ })
@@ -294,8 +304,7 @@ fun ActivityList(
     LazyColumn(modifier = Modifier.padding(18.dp)) {
         item {
             Text(
-                text = "Week $week",
-                style = MaterialTheme.typography.bodyLarge
+                text = "Week $week", style = MaterialTheme.typography.bodyLarge
             )
         }
         items(activities) { activity ->
@@ -305,9 +314,7 @@ fun ActivityList(
         }
         item {
             PageButtons(
-                onClickBack = onClickBack,
-                onClickForward = onClickForward,
-                modifier = modifier
+                onClickBack = onClickBack, onClickForward = onClickForward, modifier = modifier
             )
         }
     }
@@ -315,8 +322,7 @@ fun ActivityList(
 
 @Composable
 fun WellnessActivity(
-    activity: Activity,
-    modifier: Modifier = Modifier
+    activity: Activity, modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     val currentWeek by rememberUpdatedState(activity.week)
@@ -325,22 +331,17 @@ fun WellnessActivity(
         expanded = false
     }
     Card(
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier
-            .padding(bottom = 16.dp)
+        shape = MaterialTheme.shapes.small, modifier = modifier.padding(bottom = 16.dp)
     ) {
         Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) {
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
+                modifier = modifier.fillMaxWidth()
             ) {
                 ActivityImage(activity.imageResourceId)
                 ActivityInfo(activity.day, activity.title)
                 Spacer(modifier = modifier.weight(1f))
                 ActivityButton(
-                    expanded = expanded,
-                    onClick = { expanded = !expanded },
-                    modifier = modifier
+                    expanded = expanded, onClick = { expanded = !expanded }, modifier = modifier
                 )
             }
             if (expanded) {
@@ -352,9 +353,7 @@ fun WellnessActivity(
 
 @Composable
 fun ActivityInfo(
-    day: Int,
-    title: Int,
-    modifier: Modifier = Modifier
+    day: Int, title: Int, modifier: Modifier = Modifier
 ) {
     Column {
         Text(
@@ -383,8 +382,7 @@ fun ActivityDescription(description: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun ActivityImage(
-    @DrawableRes image: Int,
-    modifier: Modifier = Modifier
+    @DrawableRes image: Int, modifier: Modifier = Modifier
 ) {
     Image(
         painter = painterResource(image),
@@ -400,8 +398,7 @@ fun ActivityImage(
 @Composable
 fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
-        onClick = onClick,
-        modifier = modifier
+        onClick = onClick, modifier = modifier
     ) {
         Icon(
             imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
@@ -413,9 +410,7 @@ fun ActivityButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = 
 
 @Composable
 fun PageButtons(
-    onClickBack: () -> Unit,
-    onClickForward: () -> Unit,
-    modifier: Modifier = Modifier
+    onClickBack: () -> Unit, onClickForward: () -> Unit, modifier: Modifier = Modifier
 ) {
     Row {
         ElevatedButton(
@@ -424,8 +419,7 @@ fun PageButtons(
 
         ) {
             Text(
-                "Previous",
-                color = Color.Black
+                "Previous", color = Color.Black
             )
         }
         Spacer(modifier = modifier.weight(1f))
@@ -434,8 +428,7 @@ fun PageButtons(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
         ) {
             Text(
-                "Next",
-                color = Color.Black
+                "Next", color = Color.Black
             )
         }
     }
