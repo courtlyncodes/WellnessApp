@@ -6,7 +6,8 @@
     <string name="welcome2">As you are embarking on an exciting new adventure in your career, it\'s essential to take care of yourself. These daily challenges will provide you with tools and resources to establish healthy habits and maintain a balanced lifestyle.</string>
 
     <!-- String resource for first page description -->
-    <string name="how_to">Each week, you\'ll find a set of daily wellness challenges to help you improve your overall health and well-being. Use the navigation buttons at the bottom of the page to change weeks. Week 5 includes additional challenges. <strong>Remember to take care of yourself!</strong></string>
+    <string name="how_to1">Here you will find weekly wellness challenges with daily tasks to enhance your health. Explore details with drop-down arrows, mark completed challenges with checkmarks, and navigate between weeks using bottom buttons. Week 5 features extra challenges.</string>
+    <string name="how_to2">Prioritize yourself. You can do this!</string>
 
     <!-- String resources for each challenge title  -->
     <string name="meditate">Meditate</string>

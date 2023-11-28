@@ -37,7 +37,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = light_image_border,
     tertiary = light_card,
     onTertiary = light_card_expanded,
-    tertiaryContainer = light_button_hs
+    tertiaryContainer = light_button_hs,
+    surfaceVariant = dark_background
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

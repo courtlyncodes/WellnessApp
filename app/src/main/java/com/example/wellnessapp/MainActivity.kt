@@ -29,15 +29,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -83,7 +85,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    App()
+                    WellnessApp(name = "Court")
                 }
             }
         }
@@ -151,7 +153,7 @@ fun HomeScreen(
             modifier = modifier.size(200.dp)
         )
         WelcomeMessages()
-        TextField(value = name, //Takes user input for their name
+        OutlinedTextField(value = name, //Takes user input for their name
             onValueChange = { onTextChange(it) },
             label = {
                 Text(
@@ -241,11 +243,24 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
                         }
                         item {//Renders a 'how-to' message on the first page
                             Text(
-                                text = stringResource(R.string.how_to),
+                                text = stringResource(R.string.how_to1),
                                 color = Color.Black,
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = modifier.padding(25.dp)
+                                modifier = modifier.padding(start = 25.dp, top = 25.dp, end = 25.dp)
+                            )
+                        }
+                        item {//Renders a 'how-to' message on the first page
+                            Text(
+                                text = stringResource(R.string.how_to2),
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = modifier.padding(
+                                    start = 60.dp,
+                                    top = 10.dp,
+                                    end = 35.dp,
+                                    bottom = 25.dp
+                                )
                             )
                         }
                         item {//Shows the week number for week 1 above the activity list
@@ -283,32 +298,73 @@ fun WellnessApp(name: String, modifier: Modifier = Modifier) {
     }
 }
 
-//Top App Bar function
-@OptIn(ExperimentalMaterial3Api::class)
+//Creates each activity card with the activity's image, basic information, & expandable button to show an optional description
 @Composable
-fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        title = {
+fun WellnessActivity(
+    activity: Activity,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) } //State that determines if expanded button is clicked
+    val currentWeek by rememberUpdatedState(activity.week) //State that determines the week based on "Next" or "Previous" button click
+    var completed by remember { mutableStateOf(false) }
+    LaunchedEffect(currentWeek) {  //Determines if the week has been changed. If so, all cards are reset to normal state (checkboxes and descriptions disappear)
+        expanded = false
+        completed = false
+    }
+    if (!completed) { //If checkbox has not been checked
+        Card(
+            shape = MaterialTheme.shapes.small,
+            modifier = modifier.padding(bottom = 16.dp)
+        ) {
+            Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) { //Changes the color of the card if the card is expanded
+                Row(
+                    modifier = modifier.fillMaxWidth()
+                ) {
+                    ActivityImage(activity.imageResourceId)
+                    ActivityInfo(activity.day, activity.title)
+                    Spacer(modifier = modifier.weight(1f))
+                    ActivityButton(
+                        expanded = expanded,
+                        onClick = { expanded = !expanded },
+                        modifier = modifier
+                    )
+                    Checkbox(
+                        checked = completed,
+                        onCheckedChange = { completed = !completed; }
+                    )
+                }
+                if (expanded) { //If the expanded button is clicked the description of the activity is shown underneath the activity's information
+                    ActivityDescription(activity.description)
+                }
+            }
+        }
+    } else { //Collapses card when checkbox is clicked
+        Card(
+            shape = MaterialTheme.shapes.small,
+            modifier = modifier.padding(bottom = 16.dp)
+        ) {
             Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.secondary)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.logo1),
-                    contentDescription = null,
-                    modifier = modifier.size(44.dp)
+                Text(
+                    text = "Day ${activity.day}: " + stringResource(activity.title),
+                    color = Color.Black,
+                    modifier = modifier.padding(start = 10.dp, top = 10.dp)
                 )
-                Spacer(modifier = modifier.size(16.dp))
-                Image(
-                    painter = painterResource(R.drawable.logo2),
-                    contentDescription = null,
-                    modifier = modifier.size(168.dp)
+                Spacer(modifier = modifier.weight(1f))
+                Checkbox(
+                    checked = true,
+                    onCheckedChange = { completed = !completed },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color.LightGray,
+                        checkmarkColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
                 )
             }
-        },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary) //Sets the background color of the top app bar
-    )
+        }
+    }
 }
 
 //Renders a list of activity cards
@@ -342,40 +398,33 @@ fun ActivityList(
     }
 }
 
-//Creates each activity card with the activity's image, basic information, & expandable button to show an optional description
-@Composable
-fun WellnessActivity(
-    activity: Activity,
-    modifier: Modifier = Modifier
-) {
-    var expanded by remember { mutableStateOf(false) } //State that determines if expanded button is clicked
-    val currentWeek by rememberUpdatedState(activity.week) //State that determines the week based on "Next" or "Previous" button click
 
-    LaunchedEffect(currentWeek) {  //Determines if the week has been changed. If so, all cards' optional descriptions are collapsed
-        expanded = false
-    }
-    Card(
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier.padding(bottom = 16.dp)
-    ) {
-        Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) { //Changes the color of the card if the card is expanded
+//Top App Bar function
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {
             Row(
-                modifier = modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                ActivityImage(activity.imageResourceId)
-                ActivityInfo(activity.day, activity.title)
-                Spacer(modifier = modifier.weight(1f))
-                ActivityButton(
-                    expanded = expanded,
-                    onClick = { expanded = !expanded },
-                    modifier = modifier
+                Image(
+                    painter = painterResource(R.drawable.logo1),
+                    contentDescription = null,
+                    modifier = modifier.size(44.dp)
+                )
+                Spacer(modifier = modifier.size(16.dp))
+                Image(
+                    painter = painterResource(R.drawable.logo2),
+                    contentDescription = null,
+                    modifier = modifier.size(168.dp)
                 )
             }
-            if (expanded) { //If the expanded button is clicked the description of the activity is shown underneath the activity's information
-                ActivityDescription(activity.description)
-            }
-        }
-    }
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary) //Sets the background color of the top app bar
+    )
 }
 
 //Shows the basic information for each activity, including day and the title
@@ -448,6 +497,7 @@ fun ActivityButton(
             contentDescription = null
         )
     }
+
 }
 
 //Previous and Next buttons
@@ -497,6 +547,6 @@ private fun activityByWeek(week: Int): List<Activity> {
 @Composable
 fun WellnessAppPreview() {
     WellnessAppTheme {
-        App()
+        WellnessApp(name = "Court")
     }
 }
