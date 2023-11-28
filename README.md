@@ -8,7 +8,7 @@ NooGlow is a daily wellness challenge app built using Kotlin + Jetpack Compose t
 
 ## How to Use NooGlow
 
-## Organization + Planning
+### Organization + Planning
 
 ### Credits
 
