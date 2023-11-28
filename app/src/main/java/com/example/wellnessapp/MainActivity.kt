@@ -3,6 +3,7 @@
 package com.example.wellnessapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
@@ -88,7 +89,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    WellnessApp(name = "Court")
+                    App()
                 }
             }
         }
@@ -126,11 +127,9 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val rainbowColors = listOf( //List of colors for user input
-        Color(0xFF9575CD),
         Color(0xFFBA68C8),
         Color(0xFFE57373),
         Color(0xFFFFB74D),
-        Color(0xFFFFF176),
         Color(0xFFAED581),
         Color(0xFF4DD0E1),
         Color(0xFF9575CD)
@@ -196,26 +195,6 @@ fun HomeScreen(
                 color = Color.Black
             )
         }
-    }
-}
-
-//Function to store the welcome messages on the home screen
-@Composable
-fun WelcomeMessages(modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.padding(start = 25.dp, end = 25.dp, bottom = 25.dp)) {
-        Text(
-            text = stringResource(R.string.welcome1),
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(modifier = modifier.height(10.dp))
-        Text(
-            text = stringResource(R.string.welcome2),
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }
 
@@ -323,18 +302,18 @@ fun WellnessActivity(
                 modifier = modifier
                     .background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)
                     .animateContentSize(
-                        animationSpec = spring(
+                        animationSpec = spring( //adds animation to button click
                             dampingRatio = Spring.DampingRatioLowBouncy,
                             stiffness = Spring.StiffnessMedium
                         )
                     )
             ) { //Changes the color of the card if the card is expanded
-
                 Row(
                     modifier = modifier.fillMaxWidth()
                 ) {
                     ActivityImage(activity.imageResourceId)
                     ActivityInfo(activity.day, activity.title)
+                    Log.d("activitytwo", "${activity.day}")
                     Spacer(modifier = modifier.weight(1f))
                     ActivityButton(
                         expanded = expanded,
@@ -411,7 +390,6 @@ fun ActivityList(
     }
 }
 
-
 //Top App Bar function
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -438,6 +416,26 @@ fun WellnessAppTopAppBar(modifier: Modifier = Modifier) {
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary) //Sets the background color of the top app bar
     )
+}
+
+//Function to store the welcome messages on the home screen
+@Composable
+fun WelcomeMessages(modifier: Modifier = Modifier) {
+    Column(modifier = Modifier.padding(start = 25.dp, end = 25.dp, bottom = 25.dp)) {
+        Text(
+            text = stringResource(R.string.welcome1),
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = modifier.height(10.dp))
+        Text(
+            text = stringResource(R.string.welcome2),
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
 
 //Shows the basic information for each activity, including day and the title
@@ -560,6 +558,6 @@ private fun activityByWeek(week: Int): List<Activity> {
 @Composable
 fun WellnessAppPreview() {
     WellnessAppTheme {
-        WellnessApp(name = "Court")
+        App()
     }
 }

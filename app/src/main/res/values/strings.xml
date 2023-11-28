@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WellnessApp</string>
+    <string name="app_name">NooGlow</string>
 
     <!-- String resource for home page descriptions -->
     <string name="welcome1">Welcome to NooGlow, a daily journey to prioritize your well-being as a Noogler and unlock the boundless potential that lies within.</string>
