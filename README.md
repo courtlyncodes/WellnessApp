@@ -15,7 +15,7 @@ Looking ahead, I aim to implement a ViewModel to manage checkbox states, ensurin
 
 ## How to Install + Run NooGlow
 
-Clone this repository to your device, and open the app in Android Studio! Additionally, you can view an emulator containing the app here: https://appetize.io/app/sfidbqjntzmzevxnvykwo23ovu?device=pixel7&osVersion=13.0
+Clone this repository to your device, and open the app in Android Studio! Additionally, you can view an emulator containing the app here: https://appetize.io/app/u6zyh3jn5hrj6rzsqvw6zmd5r4?device=pixel7&osVersion=13.0
 
 ## How to Use NooGlow
 
