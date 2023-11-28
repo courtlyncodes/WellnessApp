@@ -6,6 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -316,7 +319,17 @@ fun WellnessActivity(
             shape = MaterialTheme.shapes.small,
             modifier = modifier.padding(bottom = 16.dp)
         ) {
-            Column(modifier = modifier.background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)) { //Changes the color of the card if the card is expanded
+            Column(
+                modifier = modifier
+                    .background(if (!expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary)
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessMedium
+                        )
+                    )
+            ) { //Changes the color of the card if the card is expanded
+
                 Row(
                     modifier = modifier.fillMaxWidth()
                 ) {
@@ -358,7 +371,7 @@ fun WellnessActivity(
                     checked = true,
                     onCheckedChange = { completed = !completed },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color.LightGray,
+                        checkedColor = MaterialTheme.colorScheme.primary,
                         checkmarkColor = MaterialTheme.colorScheme.surfaceVariant
                     )
                 )
