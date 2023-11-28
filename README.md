@@ -32,10 +32,12 @@ To organize and plan the creation of NooGlow, I first began by making a draft li
 
 Then, I began wireframing my app in Figma. I created six iterations, including the color palette, home screen, app screen, and the logo for the top app bar and Android phone icon. My Figma file can be found here: https://www.figma.com/file/wrp4TPDSCAp8hWS9RLcqJK/Wellness_App?type=design&node-id=0-1&mode=design&t=SlWoCejstLWoRK7V-0
 
-![Iteration 1](https://github.com/courtlynboykin/WellnessApp/assets/146135600/f3bae0fc-ca95-4122-ab32-72fcf7b43362) 
-![Iteration 5](https://github.com/courtlynboykin/WellnessApp/assets/146135600/eb3e4524-f4d9-40bb-91a3-8d76d44b77ac) 
-![Iteration 6](https://github.com/courtlynboykin/WellnessApp/assets/146135600/49fd2454-7799-4204-94cf-7099d33a2484)
-![Iteration 3](https://github.com/courtlynboykin/WellnessApp/assets/146135600/f2487c31-a50d-4e4b-8238-1c8f498d094f)
+![Iteration 1](https://github.com/courtlynboykin/WellnessApp/assets/146135600/46a16820-85cb-4db7-831e-2bc48a34dec8)
+![Iteration 3](https://github.com/courtlynboykin/WellnessApp/assets/146135600/d599be79-10eb-43cb-afa7-25b43d1b1b34)
+![Iteration 5](https://github.com/courtlynboykin/WellnessApp/assets/146135600/01acf99f-6299-4ac3-9d9a-bf0786f9cc40)
+![Iteration 6](https://github.com/courtlynboykin/WellnessApp/assets/146135600/9a4d63dc-d646-476b-85b2-36d4187753ac)
 
 ### Credits
 Android Basics with Compose - Unit 3: https://developer.android.com/courses/android-basics-compose/unit-3
+
+
