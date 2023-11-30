@@ -4,6 +4,8 @@ NooGlow is a daily wellness challenge app to help prioritize Nooglers' (new Goog
 
 ## Description
 
+![Screenshot 2023-11-30 2 52 08 PM](https://github.com/courtlynboykin/WellnessApp/assets/146135600/660c7340-016a-464a-906a-136d59552339)
+![Screenshot 2023-11-30 2 52 18 PM](https://github.com/courtlynboykin/WellnessApp/assets/146135600/29bec39c-1d07-4be0-95c0-716638ce6bb2)
 
 I developed Nooglow using Kotlin and Jetpack Compose, drawing inspiration from Google's Android Basics with Compose course here: https://developer.android.com/courses/android-basics-compose/course. 
 
